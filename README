@@ -1,0 +1,15 @@
+This is a mirror of http://www.vim.org/scripts/script.php?script_id=1002
+
+Syntax file for the OpenGL Shading Language.  The following is highlighted (as defined in the
+Orange Book):
+
+  - All gl_ variables
+  - All built-in functions
+  - All keywords
+
+The syntax file was modified from c.vim, so you can expect that your GLSL shaders
+will be highlighted similar to C files.
+
+All reserverd keywords (that GLSL currently does not use) are highlighted as errors.
+
+Keywords: glsl glslang opengl shading language
