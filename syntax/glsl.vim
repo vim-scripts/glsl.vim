@@ -3,7 +3,7 @@
 " Author:       Nathan Cournia <nathan@cournia.com>
 " Date:         June 4, 2004
 " File Types:   .frag .vert .glsl .fp .vp
-" Version:      1
+" Version:      1.00.01
 " Notes:        Adapted from c.vim - Bram Moolenaar <bram.vim.org>
 "               Adapted from cg.vim - Kevin Bjorke <kbjorke@nvidia.com>
 
@@ -127,7 +127,7 @@ syn match          glslBitField            display ";\s*\I\i*\s*:\s*[1-9]"me=e-1
 
 " vertex attributes
 syn keyword        glslState               gl_Color gl_SecondaryColor gl_Normal gl_Vertex gl_FogCoord
-syn match          glslState               display "gl_MultiTexCoord\d+"
+syn match          glslState               display "gl_MultiTexCoord\d\+"
 
 " vertex output variables
 syn keyword        glslState               gl_Position gl_PointSize gl_ClipVertex
@@ -163,7 +163,7 @@ syn keyword        glslConstant            gl_MaxFragmentUniformComponents gl_Ma
 " swizzling
 syn match          glslSwizzle             /\.[xyzw]\{1,4\}/
 syn match          glslSwizzle             /\.[rgba]\{1,4\}/
-syn match          glslSwizzle             /\.[stqr]\{1,4\}/
+syn match          glslSwizzle             /\.[stpq]\{1,4\}/
 
 " built in functions
 syn keyword        glslFunc                radians degrees sin cos tan asin acos atan pow exp2 log2 sqrt inversesqrt
