@@ -1,9 +1,9 @@
 " Vim syntax file the OpenGL Shading Language
 " Language:     GLSL
 " Author:       Nathan Cournia <nathan@cournia.com>
-" Date:         June 4, 2004
+" Date:         June 30, 2004
 " File Types:   .frag .vert .glsl .fp .vp
-" Version:      1.00.01
+" Version:      1.10.00
 " Notes:        Adapted from c.vim - Bram Moolenaar <bram.vim.org>
 "               Adapted from cg.vim - Kevin Bjorke <kbjorke@nvidia.com>
 
@@ -16,8 +16,8 @@ elseif exists("b:current_syntax")
 endif
 
 " a bunch of useful keywords
-syn keyword         glslStatement       break return continue discard
 syn keyword         glslConditional     if else
+syn keyword         glslStatement       break return continue discard
 syn keyword         glslRepeat          while for do
 syn keyword         glslTodo            contained TODO FIXME XXX
 
@@ -93,7 +93,9 @@ syn keyword        glslType                mat2  mat3  mat4
 syn keyword        glslType                sampler1D sampler2D sampler3D samplerCUBE sampler1DShadow sampler2DShadow
 
 syn keyword        glslStructure           struct
-syn keyword        glslStorageClass        const in out inout attribute varying uniform
+
+syn keyword        glslStorageClass        const attribute varying uniform
+syn keyword        glslStorageClass        in out inout
 
 syn keyword        glslConstant            __LINE__ __FILE__ __VERSION__
 
@@ -107,7 +109,7 @@ syn region         glslCppSkip             contained start="^\s*#\s*\(if\>\|ifde
 "syn match glslLineSkip        "\\$"
 syn cluster        glslPreProglslGroup     contains=glslPreCondit,glslIncluded,glslInclude,glslDefine,glslErrInParen,glslErrInBracket,glslUserLabel,glslSpecial,glslOctalZero,glslCppOut,glslCppOut2,glslCppSkip,glslFormat,glslNumber,glslFloat,glslOctal,glslOctalError,glslNumbersCom,glslString,glslCommentSkip,glslCommentString,glslComment2String,@glslCommentGroup,glslCommentStartError,glslParen,glslBracket,glslMulti
 syn region         glslDefine              start="^\s*#\s*\(define\|undef\)\>" skip="\\$" end="$" end="//"me=s-1 contains=ALLBUT,@glslPreProglslGroup
-syn region         glslPreProc             start="^\s*#\s*\(pragma\>\|line\>\|error\>\)" skip="\\$" end="$" keepend contains=ALLBUT,@glslPreProglslGroup
+syn region         glslPreProc             start="^\s*#\s*\(pragma\>\|line\>\|error\>\|version\>\|extension\>\)" skip="\\$" end="$" keepend contains=ALLBUT,@glslPreProglslGroup
 
 " Highlight User Labels
 syn cluster        glslMultiGroup          contains=glslIncluded,glslSpecial,glslCommentSkip,glslCommentString,glslComment2String,@glslCommentGroup,glslCommentStartError,glslUserCont,glslUserLabel,glslBitField,glslOctalZero,glslCppOut,glslCppOut2,glslCppSkip,glslFormat,glslNumber,glslFloat,glslOctal,glslOctalError,glslNumbersCom,glslCppParen,glslCppBracket,glslCppString
@@ -125,21 +127,15 @@ syn match          glslUserLabel           display "\I\i*" contained
 syn match          glslBitField            display "^\s*\I\i*\s*:\s*[1-9]"me=e-1
 syn match          glslBitField            display ";\s*\I\i*\s*:\s*[1-9]"me=e-1
 
+syn keyword        glslState               gl_Position gl_PointSize gl_ClipVertex
+syn keyword        glslState               gl_FragCoord gl_FrontFacing gl_FragColor gl_FragData gl_FragDepth
+
 " vertex attributes
 syn keyword        glslState               gl_Color gl_SecondaryColor gl_Normal gl_Vertex gl_FogCoord
 syn match          glslState               display "gl_MultiTexCoord\d\+"
 
-" vertex output variables
-syn keyword        glslState               gl_Position gl_PointSize gl_ClipVertex
-
 " varying variables
 syn keyword        glslState               gl_FrontColor gl_BackColor gl_FrontSecondaryColor gl_BackSecondaryColor gl_TexCoord gl_FogFragCoord
-
-" fragment special input vars
-syn keyword        glslState               gl_FragColor gl_FrontFacing
-
-" fragment special output vars
-syn keyword        glslState               gl_FragDepth
 
 " uniforms
 syn keyword        glslUniform             gl_ModelViewMatrix gl_ProjectionMatrix gl_ModelViewProjectionMatrix gl_NormalMatrix gl_TextureMatrix
@@ -149,6 +145,10 @@ syn keyword        glslUniform             gl_FrontLightProduct gl_BackLightProd
 syn keyword        glslUniform             gl_TextureEnvColor gl_Fog
 syn match          glslUniform             display "gl_EyePlane[STRQ]"
 syn match          glslUniform             display "gl_ObjectPlane[STRQ]"
+syn keyword        glslUniform             gl_ModelViewMatrixInverse gl_ProjectionMatrixInverse gl_ModelViewProjectionMatrixInverse 
+syn keyword        glslUniform             gl_TextureMatrixInverse gl_ModelViewMatrixTranspose gl_ProjectionMatrixTranspose
+syn keyword        glslUniform             gl_ModelViewProjectionMatrixTranspose gl_TextureMatrixTranspose gl_ModelViewMatrixInverseTranspose
+syn keyword        glslUniform             gl_ProjectionMatrixInverseTranspose gl_ModelViewProjectionMatrixInverseTranspose gl_TextureMatrixInverseTranspose
 
 " uniform types
 syn keyword        glslType                gl_DepthRangeParameters gl_PointParameters gl_MaterialParameters
@@ -158,12 +158,13 @@ syn keyword        glslType                gl_LightProducts gl_FogParameters
 " constants
 syn keyword        glslConstant            gl_MaxLights gl_MaxClipPlanes gl_MaxTextureUnits gl_MaxTextureCoords gl_MaxVertexAttribs
 syn keyword        glslConstant            gl_MaxVertexUniformComponents gl_MaxVaryingFloats gl_MaxVertexTextureImageUnits
-syn keyword        glslConstant            gl_MaxFragmentUniformComponents gl_MaxCombinedTextureImageUnits
+syn keyword        glslConstant            gl_MaxCombinedTextureImageUnits gl_MaxTextureImageUnits gl_MaxFragmentUniformComponents 
+syn keyword        glslConstant            gl_MaxDrawBuffers
 
 " swizzling
-syn match          glslSwizzle             /\.[xyzw]\{1,4\}/
-syn match          glslSwizzle             /\.[rgba]\{1,4\}/
-syn match          glslSwizzle             /\.[stpq]\{1,4\}/
+syn match          glslSwizzle             /\.[xyzw]\{1,4\}\>/
+syn match          glslSwizzle             /\.[rgba]\{1,4\}\>/
+syn match          glslSwizzle             /\.[stpq]\{1,4\}\>/
 
 " built in functions
 syn keyword        glslFunc                radians degrees sin cos tan asin acos atan pow exp2 log2 sqrt inversesqrt
@@ -177,12 +178,19 @@ syn keyword        glslFunc                textureCube textureCubeLod
 syn keyword        glslFunc                shadow1D shadow1DProj shadow1DLod shadow1DProjLod
 syn keyword        glslFunc                shadow2D shadow2DProj shadow2DLod shadow2DProjLod
 syn keyword        glslFunc                dFdx dFdy fwidth noise1 noise2 noise3 noise4
+syn keyword        glslFunc                refract exp log
 
 " highlight unsupported keywords
-syn keyword        glslUnsupported         asm class union enum typedef template goto switch default inline noinline 
-syn keyword        glslUnsupported         volatile public static extern external long short double half fixed unsigned
-syn keyword        glslUnsupported         input output hvec2 hvec3 hvec4 dvec2 dvec3 dvec4 fvec2 fvec3 fvec4 
-syn keyword        glslUnsupported         sampler2DRect sampler3DRect sizeof cast namespace using
+syn keyword        glslUnsupported         asm
+syn keyword        glslUnsupported         class union enum typedef template this packed
+syn keyword        glslUnsupported         goto switch default
+syn keyword        glslUnsupported         inline noinline volatile public static extern external interface
+syn keyword        glslUnsupported         long short double half fixed unsigned
+syn keyword        glslUnsupported         input output
+syn keyword        glslUnsupported         hvec2 hvec3 hvec4 dvec2 dvec3 dvec4 fvec2 fvec3 fvec4 
+syn keyword        glslUnsupported         sampler2DRect sampler3DRect sampler2DRectShadow
+syn keyword        glslUnsupported         sizeof cast
+syn keyword        glslUnsupported         namespace using
 
 "wtf?
 "let b:c_minlines = 50        " #if 0 constructs can be long
